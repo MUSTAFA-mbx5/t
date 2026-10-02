@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>مكتبة المصطفى | استمارة التوصيل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+  :root{
+    --gold:#f5c451;
+    --gold-2:#e0a82e;
+    --green:#25d366;
+    --danger:#ff5a5a;
+    --glass:rgba(255,255,255,.07);
+    --stroke:rgba(255,255,255,.16);
+    --txt:#eef1f7;
+    --muted:#9aa4bd;
+  }
+
+  html,body{height:100%}
+
+  body{
+    font-family:'Cairo',system-ui,sans-serif;
+    background:#0b0a1f;
+    color:var(--txt);
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:22px 16px;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* ===== الخلفية المتحركة ===== */
+  .bg{position:fixed;inset:0;z-index:-2;overflow:hidden;
+      background:linear-gradient(135deg,#0b0a1f 0%,#1a1440 40%,#2a1b4d 70%,#0b0a1f 100%);
+      background-size:300% 300%;
+      animation:bgShift 18s ease-in-out infinite;}
+  @keyframes bgShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+  .blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.45;z-index:-1;pointer-events:none;will-change:transform}
+  .b1{width:420px;height:420px;background:#7b2ff7;top:-120px;right:-100px;animation:float1 16s ease-in-out infinite}
+  .b2{width:380px;height:380px;background:#f5c451;bottom:-140px;left:-120px;animation:float2 20s ease-in-out infinite;opacity:.28}
+  .b3{width:300px;height:300px;background:#00c6ff;top:45%;left:55%;animation:float3 22s ease-in-out infinite;opacity:.22}
+  .b4{width:260px;height:260px;background:#ff2e93;bottom:10%;right:5%;animation:float1 18s ease-in-out infinite reverse;opacity:.18}
+
+  @keyframes float1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-60px,50px) scale(1.15)}66%{transform:translate(40px,-40px) scale(.9)}}
+  @keyframes float2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(80px,-60px) scale(1.2)}}
+  @keyframes float3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-30%,-70%) scale(1.3)}}
+
+  /* نجوم / نقاط متحركة */
+  .stars{position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:radial-gradient(2px 2px at 20px 30px,rgba(255,255,255,.35),transparent),
+                     radial-gradient(1.5px 1.5px at 120px 80px,rgba(245,196,81,.45),transparent),
+                     radial-gradient(1.5px 1.5px at 260px 160px,rgba(255,255,255,.25),transparent),
+                     radial-gradient(2px 2px at 380px 60px,rgba(123,47,247,.5),transparent);
+    background-size:420px 300px;
+    animation:starsMove 60s linear infinite;
+    opacity:.7}
+  @keyframes starsMove{to{background-position:420px 300px}}
+
+  /* ===== البطاقة ===== */
+  .card{
+    position:relative;
+    width:100%;
+    max-width:580px;
+    background:rgba(20,18,45,.55);
+    backdrop-filter:blur(22px) saturate(160%);
+    -webkit-backdrop-filter:blur(22px) saturate(160%);
+    border:1px solid var(--stroke);
+    border-radius:28px;
+    padding:32px 26px 28px;
+    box-shadow:0 30px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.12);
+    animation:cardIn .8s cubic-bezier(.2,.8,.2,1);
+    overflow:hidden;
+  }
+  .card::before{
+    content:'';position:absolute;inset:0;border-radius:28px;padding:1px;
+    background:linear-gradient(140deg,rgba(245,196,81,.55),transparent 35%,transparent 65%,rgba(123,47,247,.55));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+  }
+  @keyframes cardIn{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:none}}
+
+  /* ===== الهيدر ===== */
+  .header{text-align:center;margin-bottom:26px}
+  .logo{
+    width:78px;height:78px;margin:0 auto 14px;border-radius:24px;
+    background:linear-gradient(140deg,var(--gold),#c98a12);
+    display:grid;place-items:center;font-size:38px;
+    box-shadow:0 12px 30px rgba(245,196,81,.35), inset 0 -3px 0 rgba(0,0,0,.15);
+    animation:logoPulse 3.5s ease-in-out infinite;
+  }
+  @keyframes logoPulse{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-7px) rotate(-3deg)}}
+
+  .header h1{
+    font-size:1.65rem;font-weight:900;letter-spacing:-.4px;
+    background:linear-gradient(90deg,#fff,var(--gold),#fff);
+    background-size:200% auto;
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:shine 4s linear infinite;
+  }
+  @keyframes shine{to{background-position:200% center}}
+
+  .header p{color:var(--muted);font-size:.9rem;margin-top:6px;font-weight:600}
+
+  .phone-chip{
+    display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+    padding:8px 16px;border-radius:50px;font-size:.88rem;font-weight:700;
+    background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.35);
+    color:#7dffb0;text-decoration:none;direction:ltr;
+    transition:.25s;
+  }
+  .phone-chip:hover{background:rgba(37,211,102,.22);transform:translateY(-2px)}
+  .phone-chip svg{width:16px;height:16px;fill:currentColor}
+
+  /* ===== فاصل ===== */
+  .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);margin:22px 0}
+
+  /* ===== أزرار نوع التوصيل ===== */
+  .delivery-type{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
+  .type-btn{
+    position:relative;padding:14px 10px;border-radius:16px;cursor:pointer;
+    background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.13);
+    color:var(--muted);font-family:inherit;font-weight:700;font-size:.88rem;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    transition:.3s cubic-bezier(.2,.8,.2,1);
+  }
+  .type-btn .ico{font-size:1.35rem;line-height:1}
+  .type-btn:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.25);color:#fff}
+  .type-btn.active{
+    background:linear-gradient(140deg,rgba(245,196,81,.22),rgba(123,47,247,.18));
+    border-color:var(--gold);color:#fff;
+    box-shadow:0 8px 26px rgba(245,196,81,.22);
+    transform:translateY(-2px);
+  }
+  .type-btn.active::after{
+    content:'✓';position:absolute;top:8px;left:10px;font-size:.7rem;
+    width:18px;height:18px;border-radius:50%;background:var(--gold);color:#241a00;
+    display:grid;place-items:center;font-weight:900;
+  }
+
+  /* ===== الحقول ===== */
+  .field{margin-bottom:16px;position:relative;animation:fadeUp .5s backwards}
+  .field:nth-child(1){animation-delay:.05s}
+  .field:nth-child(2){animation-delay:.1s}
+  .field:nth-child(3){animation-delay:.15s}
+  .field:nth-child(4){animation-delay:.2s}
+  .field:nth-child(5){animation-delay:.25s}
+  .field:nth-child(6){animation-delay:.3s}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .field label{
+    display:flex;align-items:center;gap:7px;
+    font-size:.82rem;font-weight:700;color:#c3cbe0;margin-bottom:8px;
+  }
+  .field label .req{color:var(--gold);font-size:1rem;line-height:1}
+
+  .input-wrap{position:relative;display:flex;align-items:center}
+
+  .input-wrap input,
+  .input-wrap select,
+  .input-wrap textarea{
+    width:100%;font-family:inherit;font-size:.95rem;font-weight:600;
+    color:var(--txt);
+    background:rgba(255,255,255,.055);
+    border:1.5px solid rgba(255,255,255,.13);
+    border-radius:14px;
+    padding:14px 46px 14px 16px;
+    outline:none;
+    transition:.28s;
+    -webkit-appearance:none;appearance:none;
+  }
+  .input-wrap textarea{min-height:92px;resize:vertical;padding-right:16px;line-height:1.6}
+  .input-wrap input::placeholder,
+  .input-wrap textarea::placeholder{color:#6c7694;font-weight:500}
+
+  .input-wrap input:focus,
+  .input-wrap select:focus,
+  .input-wrap textarea:focus{
+    border-color:var(--gold);
+    background:rgba(245,196,81,.07);
+    box-shadow:0 0 0 4px rgba(245,196,81,.12);
+  }
+
+  .input-wrap .ficon{
+    position:absolute;right:15px;font-size:1rem;opacity:.55;pointer-events:none;
+    transition:.25s;
+  }
+  .input-wrap:focus-within .ficon{opacity:1;transform:scale(1.1)}
+
+  select{cursor:pointer;padding-left:42px !important}
+  select option{background:#1a1440;color:#fff}
+
+  .sel-arrow{
+    position:absolute;left:15px;pointer-events:none;opacity:.6;font-size:.7rem;
+  }
+
+  /* ===== زر GPS ===== */
+  .gps-row{display:flex;gap:10px;align-items:stretch}
+  .gps-btn{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:9px;
+    padding:14px;border-radius:14px;cursor:pointer;
+    font-family:inherit;font-weight:800;font-size:.9rem;color:#0b0a1f;
+    background:linear-gradient(135deg,#00d4ff,#0091ff);
+    border:none;
+    box-shadow:0 8px 24px rgba(0,145,255,.35);
+    transition:.28s cubic-bezier(.2,.8,.2,1);
+    position:relative;overflow:hidden;
+  }
+  .gps-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,145,255,.5)}
+  .gps-btn:active{transform:scale(.97)}
+  .gps-btn.loading{pointer-events:none;opacity:.85}
+  .gps-btn.loading .gps-ico{animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .gps-btn svg{width:18px;height:18px;fill:currentColor}
+
+  .gps-status{
+    margin-top:10px;padding:11px 14px;border-radius:12px;font-size:.82rem;font-weight:700;
+    display:none;align-items:center;gap:9px;line-height:1.5;
+    animation:fadeUp .4s;
+  }
+  .gps-status.ok{display:flex;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.35);color:#7dffb0}
+  .gps-status.err{display:flex;background:rgba(255,90,90,.12);border:1px solid rgba(255,90,90,.35);color:#ff9d9d}
+  .gps-status a{color:#fff;text-decoration:underline;font-weight:800;direction:ltr;display:inline-block}
+
+  /* ===== زر الإرسال ===== */
+  .submit-btn{
+    width:100%;margin-top:8px;padding:17px;border:none;border-radius:16px;cursor:pointer;
+    font-family:inherit;font-size:1.02rem;font-weight:900;color:#1a1200;letter-spacing:.2px;
+    background:linear-gradient(135deg,#ffd970,var(--gold),#d99a1a);
+    background-size:200% auto;
+    box-shadow:0 12px 32px rgba(245,196,81,.35), inset 0 -3px 0 rgba(0,0,0,.12);
+    transition:.3s cubic-bezier(.2,.8,.2,1);
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    position:relative;overflow:hidden;
+  }
+  .submit-btn::after{
+    content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+    transform:skewX(-20deg);
+    animation:sweep 3.2s infinite;
+  }
+  @keyframes sweep{0%{left:-100%}55%,100%{left:160%}}
+  .submit-btn:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(245,196,81,.5);background-position:right center}
+  .submit-btn:active{transform:scale(.985)}
+  .submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+  .submit-btn svg{width:19px;height:19px;fill:currentColor}
+
+  .spinner{
+    width:18px;height:18px;border:2.5px solid rgba(0,0,0,.25);
+    border-top-color:#1a1200;border-radius:50%;animation:spin .7s linear infinite;
+  }
+
+  .footer-note{
+    text-align:center;margin-top:18px;font-size:.75rem;color:#7a83a0;font-weight:600;line-height:1.7;
+  }
+
+  /* ===== Toast ===== */
+  .toast{
+    position:fixed;top:22px;left:50%;transform:translate(-50%,-140%);
+    padding:15px 26px;border-radius:16px;font-weight:800;font-size:.9rem;
+    z-index:999;display:flex;align-items:center;gap:10px;
+    backdrop-filter:blur(14px);
+    box-shadow:0 16px 44px rgba(0,0,0,.5);
+    transition:transform .5s cubic-bezier(.2,.9,.3,1.2);
+    max-width:90vw;text-align:right;
+  }
+  .toast.show{transform:translate(-50%,0)}
+  .toast.ok{background:rgba(37,211,102,.92);color:#04240f;border:1px solid rgba(255,255,255,.3)}
+  .toast.err{background:rgba(255,80,80,.94);color:#2a0000;border:1px solid rgba(255,255,255,.3)}
+
+  /* ===== استجابة الشاشات ===== */
+  @media(max-width:600px){
+    body{padding:14px 12px}
+    .card{padding:26px 18px 22px;border-radius:24px}
+    .logo{width:66px;height:66px;font-size:32px;border-radius:20px}
+    .header h1{font-size:1.38rem}
+    .header p{font-size:.82rem}
+    .input-wrap input,.input-wrap select,.input-wrap textarea{font-size:16px;padding:13px 44px 13px 14px}
+    .type-btn{font-size:.8rem;padding:12px 8px}
+    .type-btn .ico{font-size:1.15rem}
+    .blob{filter:blur(65px);opacity:.35}
+  }
+
+  @media(min-width:900px){
+    .card{max-width:620px;padding:40px 38px 34px}
+    .header h1{font-size:1.9rem}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+
+<!-- الخلفية المتحركة -->
+<div class="bg"></div>
+<div class="stars"></div>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+<div class="blob b4"></div>
+
+<!-- رسالة التنبيه -->
+<div class="toast" id="toast"></div>
+
+<!-- البطاقة -->
+<main class="card">
+
+  <header class="header">
+    <div class="logo">📚</div>
+    <h1>مكتبة المصطفى</h1>
+    <p>استمارة طلب التوصيل</p>
+    <a class="phone-chip" href="tel:07813985853">
+      <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
+      07813985853
+    </a>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- نموذج -->
+  <form id="orderForm" novalidate>
+
+    <!-- أزرار نوع التوصيل -->
+    <div class="delivery-type">
+      <button type="button" class="type-btn active" data-type="رميثة" id="typeRumaytha">
+        <span class="ico">🏠</span>
+        <span>داخل الرميثة</span>
+      </button>
+      <button type="button" class="type-btn" data-type="محافظة" id="typeGovernorate">
+        <span class="ico">🗺️</span>
+        <span>محافظة أخرى</span>
+      </button>
+    </div>
+
+    <!-- الاسم -->
+    <div class="field">
+      <label for="name"><span class="req">*</span> الاسم الكامل</label>
+      <div class="input-wrap">
+        <input type="text" id="name" name="name" placeholder="اكتب اسمك الثلاثي" autocomplete="name" required>
+        <span class="ficon">👤</span>
+      </div>
+    </div>
+
+    <!-- المحافظة -->
+    <div class="field" id="govField" style="display:none">
+      <label for="governorate"><span class="req">*</span> المحافظة</label>
+      <div class="input-wrap">
+        <select id="governorate" name="governorate">
+          <option value="">— اختر المحافظة —</option>
+          <option>بغداد</option>
+          <option>البصرة</option>
+          <option>نينوى</option>
+          <option>أربيل</option>
+          <option>النجف الأشرف</option>
+          <option>كربلاء المقدسة</option>
+          <option>المثنى</option>
+          <option>ذي قار</option>
+          <option>الأنبار</option>
+          <option>بابل</option>
+          <option>ديالى</option>
+          <option>دهوك</option>
+          <option>السليمانية</option>
+          <option>صلاح الدين</option>
+          <option>واسط</option>
+          <option>ميسان</option>
+          <option>القادسية</option>
+          <option>كركوك</option>
+        </select>
+        <span class="ficon">📍</span>
+        <span class="sel-arrow">▼</span>
+      </div>
+    </div>
+
+    <!-- المنطقة -->
+    <div class="field">
+      <label for="area"><span class="req">*</span> المنطقة / الحي</label>
+      <div class="input-wrap">
+        <input type="text" id="area" name="area" placeholder="مثال: الرميثة - حي الزهراء" required>
+        <span class="ficon">🏘️</span>
+      </div>
+    </div>
+
+    <!-- أقرب نقطة دالة -->
+    <div class="field">
+      <label for="landmark"><span class="req">*</span> أقرب نقطة دالة</label>
+      <div class="input-wrap">
+        <input type="text" id="landmark" name="landmark" placeholder="مثال: قرب جامع الإمام علي / مدرسة النور" required>
+        <span class="ficon">🧭</span>
+      </div>
+    </div>
+
+    <!-- الموقع الدقيق GPS -->
+    <div class="field">
+      <label>الموقع الدقيق (GPS)</label>
+      <button type="button" class="gps-btn" id="gpsBtn">
+        <svg class="gps-ico" viewBox="0 0 24 24"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zm8.94 3A9.01 9.01 0 0013 3.06V1h-2v2.06A9.01 9.01 0 003.06 11H1v2h2.06A9.01 9.01 0 0011 20.94V23h2v-2.06A9.01 9.01 0 0020.94 13H23v-2h-2.06zM12 19a7 7 0 110-14 7 7 0 010 14z"/></svg>
+        <span id="gpsText">تحديد موقعي بدقة</span>
+      </button>
+      <div class="gps-status" id="gpsStatus"></div>
+    </div>
+
+    <!-- رقم الهاتف -->
+    <div class="field">
+      <label for="phone"><span class="req">*</span> رقم الهاتف</label>
+      <div class="input-wrap">
+        <input type="tel" id="phone" name="phone" placeholder="07XX XXX XXXX" inputmode="tel" autocomplete="tel" required>
+        <span class="ficon">📱</span>
+      </div>
+    </div>
+
+    <!-- ملاحظة -->
+    <div class="field">
+      <label for="note">ملاحظة إضافية</label>
+      <div class="input-wrap">
+        <textarea id="note" name="note" placeholder="أي تفاصيل تريد إضافتها للطلب (اختياري)"></textarea>
+      </div>
+    </div>
+
+    <!-- زر الإرسال -->
+    <button type="submit" class="submit-btn" id="submitBtn">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      <span id="submitText">إرسال الطلب</span>
+    </button>
+
+  </form>
+
+  <p class="footer-note">
+    سيتم التواصل معك لتأكيد الطلب • مكتبة المصطفى ©
+  </p>
+
+</main>
+
+<script>
+/* ============================================================
+   ⚙️ الإعداد الوحيد المطلوب:
+   ضع رابط Cloudflare Worker الخاص بك هنا
+   ============================================================ */
+const WORKER_URL = 'https://YOUR-WORKER-NAME.YOUR-SUBDOMAIN.workers.dev';
+/* ============================================================ */
+
+const form         = document.getElementById('orderForm');
+const gpsBtn       = document.getElementById('gpsBtn');
+const gpsText      = document.getElementById('gpsText');
+const gpsStatus    = document.getElementById('gpsStatus');
+const submitBtn    = document.getElementById('submitBtn');
+const submitText   = document.getElementById('submitText');
+const govField     = document.getElementById('govField');
+const governorate  = document.getElementById('governorate');
+const toastEl      = document.getElementById('toast');
+
+let deliveryType = 'رميثة';
+let coords       = null;
+
+/* ===== تبديل نوع التوصيل ===== */
+document.querySelectorAll('.type-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    deliveryType = btn.dataset.type;
+
+    if (deliveryType === 'محافظة') {
+      govField.style.display = 'block';
+      governorate.required = true;
+    } else {
+      govField.style.display = 'none';
+      governorate.required = false;
+      governorate.value = '';
+    }
+  });
+});
+
+/* ===== تحديد الموقع GPS ===== */
+gpsBtn.addEventListener('click', () => {
+  if (!navigator.geolocation) {
+    showGps('err', '⚠️ المتصفح لا يدعم خدمة تحديد الموقع');
+    return;
+  }
+
+  gpsBtn.classList.add('loading');
+  gpsText.textContent = 'جاري تحديد الموقع...';
+  gpsStatus.className = 'gps-status';
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      coords = {
+        lat: pos.coords.latitude.toFixed(6),
+        lng: pos.coords.longitude.toFixed(6),
+        acc: Math.round(pos.coords.accuracy)
+      };
+
+      gpsBtn.classList.remove('loading');
+      gpsText.textContent = 'تم تحديد موقعك ✓';
+
+      const mapLink = `https://www.google.com/maps?q=${coords.lat},${coords.lng}`;
+      gpsStatus.className = 'gps-status ok';
+      gpsStatus.innerHTML = `
+        <span>📍</span>
+        <div>
+          تم تحديد موقعك بنجاح (دقة ≈ ${coords.acc}م)<br>
+          <a href="${mapLink}" target="_blank" rel="noopener">${coords.lat}, ${coords.lng} — عرض الخريطة</a>
+        </div>`;
+    },
+    err => {
+      gpsBtn.classList.remove('loading');
+      gpsText.textContent = 'تحديد موقعي بدقة';
+      let msg = 'تعذّر تحديد الموقع';
+      if (err.code === 1) msg = '⚠️ تم رفض إذن الوصول للموقع. يرجى السماح من إعدادات المتصفح';
+      else if (err.code === 2) msg = '⚠️ الموقع غير متاح حالياً، حاول مرة أخرى';
+      else if (err.code === 3) msg = '⚠️ انتهت مهلة تحديد الموقع، حاول مجدداً';
+      showGps('err', msg);
+    },
+    { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+  );
+});
+
+function showGps(type, msg) {
+  gpsStatus.className = 'gps-status ' + type;
+  gpsStatus.innerHTML = `<span>${type === 'ok' ? '✅' : '❌'}</span><div>${msg}</div>`;
+}
+
+/* ===== Toast ===== */
+let toastTimer;
+function toast(msg, type = 'ok') {
+  clearTimeout(toastTimer);
+  toastEl.textContent = (type === 'ok' ? '✅ ' : '⚠️ ') + msg;
+  toastEl.className = 'toast ' + type + ' show';
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 4200);
+}
+
+/* ===== التحقق ===== */
+function validate() {
+  const name     = document.getElementById('name').value.trim();
+  const area     = document.getElementById('area').value.trim();
+  const landmark = document.getElementById('landmark').value.trim();
+  const phone    = document.getElementById('phone').value.trim();
+  const gov      = governorate.value;
+
+  if (name.length < 3)      { toast('يرجى كتابة الاسم الكامل', 'err'); return null; }
+  if (deliveryType === 'محافظة' && !gov) { toast('يرجى اختيار المحافظة', 'err'); return null; }
+  if (area.length < 2)      { toast('يرجى كتابة المنطقة', 'err'); return null; }
+  if (landmark.length < 3)  { toast('يرجى كتابة أقرب نقطة دالة', 'err'); return null; }
+  if (!/^0?7\d{9}$/.test(phone.replace(/[\s\-]/g, ''))) {
+    toast('رقم الهاتف غير صحيح (يبدأ بـ 07)', 'err'); return null;
+  }
+
+  return {
+    name,
+    deliveryType,
+    governorate: deliveryType === 'محافظة' ? gov : 'المثنى (الرميثة)',
+    area,
+    landmark,
+    phone,
+    note: document.getElementById('note').value.trim(),
+    coords
+  };
+}
+
+/* ===== الإرسال ===== */
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const data = validate();
+  if (!data) return;
+
+  submitBtn.disabled = true;
+  submitText.textContent = 'جاري الإرسال...';
+  const spinner = document.createElement('div');
+  spinner.className = 'spinner';
+  submitBtn.querySelector('svg').replaceWith(spinner);
+
+  try {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (!res.ok) throw new Error('فشل الاتصال');
+
+    toast('تم إرسال طلبك بنجاح، سنتواصل معك قريباً');
+    form.reset();
+    coords = null;
+    gpsText.textContent = 'تحديد موقعي بدقة';
+    gpsStatus.className = 'gps-status';
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('typeRumaytha').classList.add('active');
+    deliveryType = 'رميثة';
+    govField.style.display = 'none';
+
+  } catch (err) {
+    toast('حدث خطأ في الإرسال، حاول مرة أخرى', 'err');
+  } finally {
+    submitBtn.disabled = false;
+    submitText.textContent = 'إرسال الطلب';
+    spinner.replaceWith(
+      Object.assign(document.createElementNS('http://www.w3.org/2000/svg','svg'),
+      { viewBox:'0 0 24 24', innerHTML:'<path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>' })
+    );
+  }
+});
+
+/* إزالة الخطأ عند الكتابة */
+document.querySelectorAll('input, select, textarea').forEach(el => {
+  el.addEventListener('input', () => el.style.borderColor = '');
+});
+</script>
+
+</body>
+</html>
